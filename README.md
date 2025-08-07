@@ -79,8 +79,8 @@ graph TB
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/crypto-price-service.git
-cd crypto-price-service
+git clone https://github.com/m-mahallati/price_publisher.git
+cd price_publisher
 ```
 
 ### 2. Configure Environment
@@ -505,10 +505,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [Wiki](https://github.com/yourusername/crypto-price-service/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/crypto-price-service/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/crypto-price-service/discussions)
-- **Email**: support@yourcompany.com
+- **Issues**: [GitHub Issues](https://github.com/m-mahallati/price_publisher/issues)
+- **Email**: mahdi.mahallati@outlook.com
 
 ---
 
