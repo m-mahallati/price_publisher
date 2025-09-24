@@ -2,3 +2,4 @@ pyzmq>=25.0.0
 websockets>=11.0.0
 ujson>=5.7.0
 kubernetes>=28.1.0
+python-dotenv

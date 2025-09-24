@@ -1,9 +1,0 @@
-{
-    "frontend_port": 5545,
-    "backend_pull_port": 5546,
-    "monitoring_port": 8000,
-    "max_workers": 1,
-    "receive_timeout_ms": 1000,
-    "high_water_mark": 1000,
-    "log_level": "INFO"
-  }

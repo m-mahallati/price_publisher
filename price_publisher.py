@@ -10,6 +10,8 @@ import uuid
 import signal
 import time
 from logging.handlers import RotatingFileHandler
+from dotenv import load_dotenv
+import os
 
 # Leader election imports
 try:
@@ -55,6 +57,9 @@ logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
 #logging.disable(logging.CRITICAL)
+
+"""Load configuration from environment variables only"""
+load_dotenv()  # load .env file
 
 # -----------------------
 # Leader Election Class
@@ -295,7 +300,7 @@ health_status = {
 # -----------------------
 # ZMQ PUSH Endpoint
 # -----------------------
-ZMQ_PUSH_ENDPOINT = os.getenv('ZMQ_PUSH_ENDPOINT', "tcp://zmq-proxy:5546")  # Connect to proxy's PULL socket
+ZMQ_PUSH_ENDPOINT = os.getenv('ZMQ_PUSH_ENDPOINT', "tcp://127.0.0.1:6001")  # Connect to proxy's PULL socket
 
 # -----------------------
 # Exchange Name

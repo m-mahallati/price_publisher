@@ -11,13 +11,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container
-COPY requirements.price_publisher.txt /app/requirements.price_publisher.txt
+COPY requirements.txt /app/requirements.txt
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.price_publisher.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . /app
 
 # Run the application
-CMD ["python", "scripts/price_publisher.py"]
+CMD ["python", "price_publisher.py"]
