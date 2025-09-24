@@ -8,18 +8,22 @@ variables:
   PROJECT: "tools"
   IMAGE_NAME: "${REGISTRY}/${PROJECT}/price_publisher"
 
-# Use Docker-in-Docker (dind) service
 default:
-  image: docker:27.0.3
-  tags:
-    - gitlab
-
-  services:
-    - docker:27.0.3-dind
   before_script:
-    - apk add --no-cache make bash
-    # login to private registry (set CI_REGISTRY_USER + CI_REGISTRY_PASSWORD in GitLab settings)
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $REGISTRY
+    # Check and install Docker if needed
+    - if ! command -v docker &> /dev/null; then
+        echo "Installing Docker...";
+        curl -fsSL https://get.docker.com -o get-docker.sh;
+        sudo sh get-docker.sh;
+        sudo usermod -aG docker $USER;
+      fi
+    # Install make if needed
+    - if ! command -v make &> /dev/null; then
+        echo "Installing make...";
+        sudo apt update && sudo apt install -y make;
+      fi
+    # Registry login
+    - echo "$CI_REGISTRY_PASSWORD" | sudo docker login -u "$CI_REGISTRY_USER" --password-stdin $REGISTRY
 
 build-job:
   stage: build
@@ -31,4 +35,4 @@ push-job:
   script:
     - make push
   only:
-    - main   # only push to registry on commits to main branch (adjust as needed)
+    - main
