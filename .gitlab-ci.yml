@@ -9,13 +9,12 @@ variables:
   IMAGE_NAME: "${REGISTRY}/${PROJECT}/price_publisher"
 
 default:
-  before_script:
-    # Verify dependencies are available
+  # Verify dependencies are available
     - docker --version
     - make --version
     # Registry login
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $REGISTRY
-
+    
 build-job:
   stage: build
   script:
