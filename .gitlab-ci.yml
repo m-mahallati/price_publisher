@@ -11,6 +11,9 @@ variables:
 # Use Docker-in-Docker (dind) service
 default:
   image: docker:27.0.3
+  tags:
+    - gitalb
+
   services:
     - docker:27.0.3-dind
   before_script:
