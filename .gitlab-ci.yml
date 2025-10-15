@@ -25,7 +25,7 @@ push-job:
   script:
     - make push
   only:
-    - main
+    - feature/k8s_enabled
 
 deploy-dev:
   stage: deploy
@@ -46,7 +46,7 @@ deploy-dev:
     name: development
     url: http://dev.ahurix.com:30555
   only:
-    - develop
+    - feature/k8s_enabled
     - main
   when: manual
 
