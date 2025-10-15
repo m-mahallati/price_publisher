@@ -34,11 +34,11 @@ deploy-dev:
     entrypoint: ['']
   variables:
     KUBECONFIG: /tmp/kubeconfig
-  before_script:
+  
+  script:
     - echo "$KUBE_CONFIG_DEV" | base64 -d > $KUBECONFIG
     - chmod 600 $KUBECONFIG
     - kubectl cluster-info
-  script:
     - kubectl apply -k k8s/overlays/dev
     - kubectl rollout status deployment/price-publisher -n price-publisher --timeout=300s
     - kubectl get pods -n price-publisher
