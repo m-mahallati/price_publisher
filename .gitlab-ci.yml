@@ -8,8 +8,13 @@ variables:
   REGISTRY: "registry.ahurix.com"
   PROJECT: "tools"
   IMAGE_NAME: "${REGISTRY}/${PROJECT}/price_publisher"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
 default:
+  image: docker:latest
+  services:
+    - docker:dind
   before_script:
     - docker --version
     - make --version
@@ -34,11 +39,11 @@ deploy-dev:
     entrypoint: ['']
   variables:
     KUBECONFIG: /tmp/kubeconfig
-  
-  script:
+  before_script:
     - echo "$KUBE_CONFIG_DEV" | base64 -d > $KUBECONFIG
     - chmod 600 $KUBECONFIG
     - kubectl cluster-info
+  script:
     - kubectl apply -k k8s/overlays/dev
     - kubectl rollout status deployment/price-publisher -n price-publisher --timeout=300s
     - kubectl get pods -n price-publisher
