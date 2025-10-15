@@ -17,18 +17,18 @@ default:
     - docker:dind
   before_script:
     - docker --version
-    - make --version
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $REGISTRY
 
 build-job:
   stage: build
   script:
-    - make build
+    - docker build -t ${IMAGE_NAME}:${VERSION} -t ${IMAGE_NAME}:latest .
 
 push-job:
   stage: push
   script:
-    - make push
+    - docker push ${IMAGE_NAME}:${VERSION}
+    - docker push ${IMAGE_NAME}:latest
   only:
     - feature/k8s_enabled
 
