@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: price-publisher
+  namespace: price-publisher
+  labels:
+    app.kubernetes.io/name: price-publisher
+    app.kubernetes.io/instance: price-publisher
+    app.kubernetes.io/component: publisher
+    app.kubernetes.io/part-of: crypto-tools
+    app.kubernetes.io/version: "1.0.0"
+spec:
+  replicas: 1  # Start with 1 replica, can be overridden in overlays
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: price-publisher
+      app.kubernetes.io/instance: price-publisher
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: price-publisher
+        app.kubernetes.io/instance: price-publisher
+        app.kubernetes.io/component: publisher
+        app.kubernetes.io/part-of: crypto-tools
+        app.kubernetes.io/version: "1.0.0"
+      annotations:
+        prometheus.io/scrape: "false"  # Update if you add metrics later
+    spec:
+      serviceAccountName: price-publisher
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: price-publisher
+        image: registry.ahurix.com/tools/price_publisher:latest
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false  # App writes logs
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - containerPort: 5555
+          name: zmq-publisher
+          protocol: TCP
+        env:
+        - name: LOG_DIR
+          value: "/var/log/crypto"
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        envFrom:
+        - configMapRef:
+            name: price-publisher-config
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[p]rice_publisher.py' || exit 1"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "ps aux | grep '[p]rice_publisher.py' || exit 1"
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/crypto
+        - name: tmp-volume
+          mountPath: /tmp
+      volumes:
+      - name: log-volume
+        emptyDir: {}
+      - name: tmp-volume
+        emptyDir: {}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"

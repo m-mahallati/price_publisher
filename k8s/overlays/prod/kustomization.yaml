@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: price-publisher-prod
+
+namespace: price-publisher
+
+resources:
+  - ../../base
+
+labels:
+  - pairs:
+      environment: prod
+
+patches:
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: price-publisher
+
+images:
+  - name: registry.ahurix.com/tools/price_publisher
+    newTag: "1.0.0"  # Use specific version in production

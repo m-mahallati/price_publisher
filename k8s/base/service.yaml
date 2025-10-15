@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: price-publisher
+  namespace: price-publisher
+  labels:
+    app.kubernetes.io/name: price-publisher
+    app.kubernetes.io/component: service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5555
+    targetPort: zmq-publisher
+    protocol: TCP
+    name: zmq-publisher
+  selector:
+    app.kubernetes.io/name: price-publisher
+    app.kubernetes.io/instance: price-publisher
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: price-publisher-external
+  namespace: price-publisher
+  labels:
+    app.kubernetes.io/name: price-publisher
+    app.kubernetes.io/component: service-external
+spec:
+  type: NodePort
+  ports:
+  - port: 5555
+    targetPort: zmq-publisher
+    protocol: TCP
+    name: zmq-publisher
+    nodePort: 30555  # External access for ZMQ clients
+  selector:
+    app.kubernetes.io/name: price-publisher
+    app.kubernetes.io/instance: price-publisher

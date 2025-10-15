@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: price-publisher-config
+  namespace: price-publisher
+  labels:
+    app.kubernetes.io/name: price-publisher
+    app.kubernetes.io/component: config
+data:
+  EXCHANGE_NAME: "bingx"
+  ZMQ_PUSH_ENDPOINT: "tcp://127.0.0.1:6001"
+  TRADING_PAIRS: "XAUT-USDT,DOGE-USDT,ETH-USDT,BTC-USDT"
+  BINGX_SPOT_PAIRS: "USDC-USDT,EUR-USDT"
+  URL_BINGX: "wss://open-api-swap.bingx.com/swap-market"
+  TZ: "Asia/Tehran"
