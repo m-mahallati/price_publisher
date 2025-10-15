@@ -19,5 +19,5 @@ spec:
         - name: ENVIRONMENT
           value: "development"
       nodeSelector:
-        kubernetes.io/hostname: dev.ahurix.com  # Target worker node
+        kubernetes.io/hostname: development  # Target worker node
         kubernetes.io/os: linux
