@@ -31,6 +31,7 @@ push-job:
     - docker push ${IMAGE_NAME}:latest
   only:
     - feature/k8s_enabled
+    - main
 
 deploy-dev:
   stage: deploy
@@ -53,7 +54,6 @@ deploy-dev:
   only:
     - feature/k8s_enabled
     - main
-  when: manual
 
 deploy-prod:
   stage: deploy
