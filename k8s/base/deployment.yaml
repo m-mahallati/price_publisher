@@ -32,6 +32,8 @@ spec:
         prometheus.io/scrape: "false"  # Update if you add metrics later
     spec:
       serviceAccountName: price-publisher
+      imagePullSecrets:                     # <-- added this line
+        - name: regcred                     # <-- your secret name
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
