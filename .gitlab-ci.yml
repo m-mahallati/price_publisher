@@ -13,8 +13,6 @@ variables:
 
 default:
   image: docker:latest
-  services:
-    - docker:dind
   before_script:
     - docker --version
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $REGISTRY
